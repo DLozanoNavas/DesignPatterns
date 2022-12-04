@@ -12,6 +12,7 @@ namespace Builder
     /// </summary>
     public interface ISandwichBuilder
     {
+        Sandwich Sandwich { get; set; } // Concrete (or abstract product)
         public void BuildSandwich();
     }
 
