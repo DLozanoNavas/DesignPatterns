@@ -9,8 +9,10 @@ Console.Title = "Bridge Pattern";
  * Abstraction defines the abstraction´s interface and holds a reference to the Implementor.
  */
 
-var cart = new ItalyCart(new TenPercentCoupon());
+var cart1 = new SpainCart(new NoCoupon());
+var cart2 = new ItalyCart(new TenPercentCoupon());
 
-cart.CalculateTotal();
+cart1.CalculateTotal();
+cart2.CalculateTotal();
 
 Console.ReadKey();
