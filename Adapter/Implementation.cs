@@ -7,34 +7,58 @@ using Newtonsoft.Json;
 
 namespace Adapter
 {
-    public class City
+    /// <summary>
+    /// Source (Adaptee)
+    /// </summary>
+    public class ExternalSystem
     {
-        public string Name { get; set; }
-        public long HabitantsCount { get; set; }
+        public  CityFromExternalSystem GetCity()
+        {
+            return new()
+            {
+                Name = "Tunja",
+                CountryID = "COL",
+                Population = 200000
+            };
+        }
     }
 
+    /// <summary>
+    /// Client
+    /// </summary>
     public class Client
     {
-        ICityAdapter CityAdapter { get;  }
+        ICityAdapter CityAdapter { get; }
         public Client(ICityAdapter cityAdapter)
         {
             CityAdapter = cityAdapter;
         }
-       public  void UseCity()
-       {
-           var city = CityAdapter.GetCity();
-           Console.WriteLine(JsonConvert.SerializeObject(city));
-       }
+        public void UseCity()
+        {
+            var city = CityAdapter.GetCity();
+            Console.WriteLine(JsonConvert.SerializeObject(city));
+        }
     }
 
+    /// <summary>
+    /// Target
+    /// </summary>
     public interface ICityAdapter
     {
         City GetCity();
     }
 
+    /// <summary>
+    /// Adapter
+    /// </summary>
     public class CityAdapter : ICityAdapter
     {
         ExternalSystem ExternalSystem { get; set; }
+
+        public CityAdapter()
+        {
+            ExternalSystem = new ExternalSystem();
+        }
         public City GetCity()
         {
             var cityFromExternalSystem = ExternalSystem.GetCity();
@@ -45,18 +69,28 @@ namespace Adapter
             };
         }
     }
-
-    public class ExternalSystem
+    
+    /// <summary>
+    /// Class Adapter
+    /// </summary>
+    public class CityClassAdapter : ExternalSystem, ICityAdapter
     {
-        public static CityFromExternalSystem GetCity()
+        public City GetCity()
         {
+            var cityFromExternalSystem = base.GetCity();
             return new()
             {
-                Name = "Tunja",
-                CountryID = "COL",
-                Population = 200000
+                Name = cityFromExternalSystem.Name,
+                HabitantsCount = cityFromExternalSystem.Population,
             };
         }
+    }
+
+
+    public class City
+    {
+        public string Name { get; set; }
+        public long HabitantsCount { get; set; }
     }
 
     public class CityFromExternalSystem
